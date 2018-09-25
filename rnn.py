@@ -84,6 +84,37 @@ regressor.fit(x = X_train, y = y_train, batch_size = 32, epochs = 1)
 
 
 
+# Part 3 - Making predictions and visualizing the result
+
+# Getting real stock price of Jan 2017
+dataset_test = pd.read_csv('Google_Stock_Price_Test.csv')
+real_stock_price = dataset_test.iloc[:, 1:2].values
+
+# Getting the predicted stock price of Jan 2017
+dataset_total = pd.concat((dataset_train['Open'], dataset_test['Open']), axis = 0)
+# Get 60 rows of past data
+inputs = dataset_total[len(dataset_total) - len(dataset_test) - 60 :].values
+inputs = inputs.reshape(-1, 1)
+# dont fit only transform
+inputs = scaler.transform(inputs)
+
+# prepare a test case similar to the training data instance
+X_test = []
+for i in range(60, 80):
+    X_test.append(inputs[i - 60: i, 0])
+
+X_test = np.array(X_test)
+
+# reshape to what keras regressor accepts
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1] , 1))
+
+# make predictions for X_test
+predicted_stock_price = regressor.predict(X_test)
+
+# inverse feature scaling to original scale
+predicted_stock_price = scaler.inverse_transform(predicted_stock_price)
+
+# Visualizing the results
 
 
 
