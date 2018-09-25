@@ -21,6 +21,22 @@ scaler = MinMaxScaler(feature_range = (0,1))
 # apply scaler
 training_set_scaled = scaler.fit_transform(training_set)
 
+# creating a data structure with 60 timesteps and 1 output, 60 previous data rows
+# past 60 timesteps, t - 60, just right to avoid under or overfitting
+# X_train is past 60 rows, y_train is t + 1 prediction
+X_train = []
+y_train = []
+
+for i in range(60, len(training_set_scaled + 1)):
+    X_train.append(training_set_scaled[i-60:i, 0])
+    y_train.append(training_set_scaled[i, 0])
+
+# convert X_train and y_train from lists to np arrays
+X_train, y_train = np.array(X_train), np.array(y_train)
+
+# reshaping, adding another dimension
+# adding another indicator
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1] , 1))
 
 
 # Part 2 - Building the RNN
