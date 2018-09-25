@@ -41,4 +41,55 @@ X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1] , 1))
 
 # Part 2 - Building the RNN
 
+# import libraries
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers import LSTM
+from keras.layers import Dropout
+
+# initialize rnn as sequence of layers (not a computational graph)
+regressor = Sequential()
+
+# adding LSTM layers
+# units - number of LSTM cells or memory units, lower number of units cant capture more info
+# return_sequences - set to true because we're building a stacked LSTM with several
+# layers, when finished adding layers, don't include this because its default value
+# is false
+# input_shape - shape of X_train training set (observation, timesteps, indicators)
+# only need to add timesteps and indicators because observatios will automatically
+# be taken into account, no need to be explicit
+regressor.add(LSTM(units = 50, return_sequences = True, input_shape = (X_train.shape[1], 1) ))
+# adding dropout regularization to avoid overfitting - classical rate is 0.2 = 20%
+regressor.add(Dropout(rate = 0.2))      
+
+# adding more layers, no need to specify input_shape now
+regressor.add(LSTM(units = 50, return_sequences = True ))
+regressor.add(Dropout(rate = 0.2))      
+
+regressor.add(LSTM(units = 50, return_sequences = True ))
+regressor.add(Dropout(rate = 0.2))      
+
+regressor.add(LSTM(units = 50 ))
+regressor.add(Dropout(rate = 0.2))      
+
+# adding output layer
+regressor.add(Dense(units = 1))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Part 3 - Making the predictions and visualising the results
