@@ -115,7 +115,13 @@ predicted_stock_price = regressor.predict(X_test)
 predicted_stock_price = scaler.inverse_transform(predicted_stock_price)
 
 # Visualizing the results
-
+plt.plot(real_stock_price, color = 'red', label = 'Real Google Stock Price')
+plt.plot(predicted_stock_price, color = 'green', label = 'Predicted Google Stock Price')
+plt.title('Google Stock Price Prediction for Jan 2017')
+plt.xlabel('Time')
+plt.ylabel('Google Stock Price')
+plt.legend()
+plt.show()
 
 
 
