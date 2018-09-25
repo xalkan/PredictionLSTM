@@ -75,6 +75,11 @@ regressor.add(Dropout(rate = 0.2))
 # adding output layer
 regressor.add(Dense(units = 1))
 
+# compiling the rnn, using adam instead of rmsprop because better results in this case
+regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
+
+# fitting the rnn to the training data
+regressor.fit(x = X_train, y = y_train, batch_size = 32, epochs = 1)
 
 
 
