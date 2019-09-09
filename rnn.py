@@ -42,13 +42,21 @@ X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1] , 1))
 # Part 2 - Building the RNN
 
 # import libraries
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense
 from keras.layers import LSTM
 from keras.layers import Dropout
 
 # initialize rnn as sequence of layers (not a computational graph)
 regressor = Sequential()
+
+# check if already saved model is present 
+try:
+    model_found = True
+    regressor = load_model('google_prediction_lstm.h5')
+except:
+    print('No saved model found')
+    model_found = False
 
 # adding LSTM layers
 # units - number of LSTM cells or memory units, lower number of units cant capture more info
@@ -58,30 +66,32 @@ regressor = Sequential()
 # input_shape - shape of X_train training set (observation, timesteps, indicators)
 # only need to add timesteps and indicators because observatios will automatically
 # be taken into account, no need to be explicit
-regressor.add(LSTM(units = 50, return_sequences = True, input_shape = (X_train.shape[1], 1) ))
-# adding dropout regularization to avoid overfitting - classical rate is 0.2 = 20%
-regressor.add(Dropout(rate = 0.2))      
+if not model_found:
+    
+    regressor.add(LSTM(units = 50, return_sequences = True, input_shape = (X_train.shape[1], 1) ))
+    # adding dropout regularization to avoid overfitting - classical rate is 0.2 = 20%
+    regressor.add(Dropout(rate = 0.2))      
 
-# adding more layers, no need to specify input_shape now
-regressor.add(LSTM(units = 50, return_sequences = True ))
-regressor.add(Dropout(rate = 0.2))      
+    # adding more layers, no need to specify input_shape now
+    regressor.add(LSTM(units = 50, return_sequences = True ))
+    regressor.add(Dropout(rate = 0.2))      
 
-regressor.add(LSTM(units = 50, return_sequences = True ))
-regressor.add(Dropout(rate = 0.2))      
+    regressor.add(LSTM(units = 50, return_sequences = True ))
+    regressor.add(Dropout(rate = 0.2))      
 
-regressor.add(LSTM(units = 50 ))
-regressor.add(Dropout(rate = 0.2))      
+    regressor.add(LSTM(units = 50 ))
+    regressor.add(Dropout(rate = 0.2))      
 
-# adding output layer
-regressor.add(Dense(units = 1))
+    # adding output layer
+    regressor.add(Dense(units = 1))
 
-# compiling the rnn, using adam instead of rmsprop because better results in this case
-regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
+    # compiling the rnn, using adam instead of rmsprop because better results in this case
+    regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
 
-# fitting the rnn to the training data
-regressor.fit(x = X_train, y = y_train, batch_size = 32, epochs = 1)
+    # fitting the rnn to the training data
+    regressor.fit(x = X_train, y = y_train, batch_size = 32, epochs = 100)
 
-
+    regressor.save('google_prediction_lstm.h5')
 
 
 # Part 3 - Making predictions and visualizing the result
@@ -122,16 +132,3 @@ plt.xlabel('Time')
 plt.ylabel('Google Stock Price')
 plt.legend()
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-# Part 3 - Making the predictions and visualising the results
