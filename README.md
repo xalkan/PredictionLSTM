@@ -9,7 +9,8 @@ Using a [Recurrent Neural Network](https://en.wikipedia.org/wiki/Recurrent_neura
 <img  src="https://github.com/xalkan/PredictionLSTM/blob/master/output.gif" />
 
 
-  
+Repo contains a h5py file with model architecture and weights trained on 100 epochs.
+If you want to train your own model, then delete 'google_prediction_lstm.h5' file.
 
 ### Build and Run
 
